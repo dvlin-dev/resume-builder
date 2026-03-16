@@ -143,6 +143,31 @@ html, body, #root {
 }
 
 /* ========================
+   Resizable divider line
+   ======================== */
+.divider-line {
+  width: 1px;
+  background: #e5e7eb;
+  cursor: col-resize;
+  flex-shrink: 0;
+  position: relative;
+}
+
+/* Wider invisible hit area */
+.divider-line::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -3px;
+  right: -3px;
+}
+
+.divider-line:hover {
+  background: #9ca3af;
+}
+
+/* ========================
    CodeMirror full height
    ======================== */
 .cm-editor {
