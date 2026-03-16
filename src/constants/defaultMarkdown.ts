@@ -2,7 +2,7 @@ export const defaultMarkdown = `---
 name: 陈平安
 email: pingan.chen@example.com
 phone: 138 0000 1234
-avatar: /avatar.jpg
+avatar: https://api.dicebear.com/9.x/notionists/svg?seed=pingan
 ---
 
 ## 🏢 工作经历

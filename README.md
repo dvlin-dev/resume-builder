@@ -1,73 +1,198 @@
-# React + TypeScript + Vite
+# Resume Builder
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+一个 Markdown 驱动的简历编辑器。左侧写 Markdown，右侧实时预览 A4 简历效果，支持导出 PDF 和 Markdown 文件。
 
-Currently, two official plugins are available:
+## 快速开始
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+pnpm install
+pnpm dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+打开 http://localhost:5173 即可使用。
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Markdown 简历格式规范
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+简历内容由两部分组成：**YAML Frontmatter（个人信息）** 和 **Markdown Body（简历正文）**。
+
+### 1. YAML Frontmatter — 个人信息
+
+文件顶部用 `---` 包裹的 YAML 块，用于定义简历头部的个人信息。
+
+```yaml
+---
+name: 陈平安
+email: pingan.chen@example.com
+phone: 138 0000 1234
+avatar: https://example.com/avatar.jpg
+---
 ```
+
+| 字段 | 必填 | 说明 |
+|------|------|------|
+| `name` | 是 | 姓名，显示为简历最顶部的大标题 |
+| `email` | 否 | 邮箱地址 |
+| `phone` | 否 | 电话号码 |
+| `avatar` | 否 | 头像图片 URL（支持任意图片链接） |
+
+`email` 和 `phone` 会以 `·` 分隔显示在姓名下方。`avatar` 显示为圆角方形头像，位于右上角。
+
+### 2. 分区标题 — `##` 二级标题
+
+每个 `##` 二级标题代表简历的一个大分区，渲染为**加粗标题 + 下方分割线**。
+
+```markdown
+## 🏢 工作经历
+```
+
+- 标题前可加 emoji 作为视觉标识，emoji 与文字之间用空格分隔
+- 常见分区：工作经历、项目经历、教育经历、获奖经历、技能特长等
+- 分区的顺序由你自己决定，按重要程度排列即可
+
+### 3. 条目标题 — `###` 三级标题
+
+每个 `###` 三级标题代表一个具体条目（一段工作、一个项目、一段教育经历等）。
+
+**核心规则：用 `|` 将标题分为左右两部分。**
+
+```
+### 左侧内容 | 右侧内容
+```
+
+- **`|` 左侧**：条目主体信息（加粗显示，左对齐）
+- **`|` 右侧**：时间和地点等辅助信息（灰色小字，右对齐）
+- 左侧和右侧内部可用 `·` 分隔多个字段
+
+不同场景的写法示例：
+
+```markdown
+# 工作经历条目
+### 字节跳动 · 高级前端工程师 | 2021.07 - 至今 · 北京
+
+# 项目经历条目
+### 创作者数据平台 · 技术负责人 | 2022.03 - 2023.06
+
+# 教育经历条目
+### 北京大学 · 计算机科学硕士 | 2019.09 - 2022.06 · 北京
+
+# 获奖经历条目（右侧没有时间范围，只有单个时间点）
+### ACM 区域赛金奖 | 2021.05 · 上海
+
+# 如果没有右侧信息，可以省略 |
+### 奖项名称
+```
+
+### 4. 条目内容 — 列表和段落
+
+在 `###` 标题下方，使用**无序列表**或**段落**来描述具体内容。
+
+**无序列表**（适合工作/项目经历，逐条列举成果）：
+
+```markdown
+### 字节跳动 · 高级前端工程师 | 2021.07 - 至今 · 北京
+
+- 负责抖音创作者平台的前端架构设计与开发，服务超过 500 万创作者
+- 主导前端性能优化项目，首屏加载时间从 3.2s 降低至 1.1s，提升 65%
+- 搭建组件库和脚手架工具，提升团队开发效率 40%
+```
+
+**段落文本**（适合教育经历等描述性内容）：
+
+```markdown
+### 北京大学 · 计算机科学硕士 | 2019.09 - 2022.06 · 北京
+
+研究方向为自然语言处理，GPA 3.9/4.0，获国家奖学金。
+```
+
+**加粗关键词**（适合技能/其它分区）：
+
+```markdown
+## 💡 技能特长
+
+- **前端框架**：React、Vue 3、Next.js，熟悉框架原理和性能优化
+- **工程化**：Webpack、Vite、Rollup、Turborepo
+- **语言**：英语 CET-6，日语 N2
+```
+
+### 5. 完整示例
+
+```markdown
+---
+name: 陈平安
+email: pingan.chen@example.com
+phone: 138 0000 1234
+avatar: https://api.dicebear.com/9.x/notionists/svg?seed=pingan
+---
+
+## 🏢 工作经历
+
+### 字节跳动 · 高级前端工程师 | 2021.07 - 至今 · 北京
+
+- 负责抖音创作者平台的前端架构设计与开发，服务超过 500 万创作者
+- 主导前端性能优化项目，首屏加载时间从 3.2s 降低至 1.1s，提升 65%
+- 搭建组件库和脚手架工具，提升团队开发效率 40%
+
+### 美团 · 前端工程师 | 2019.07 - 2021.06 · 北京
+
+- 参与美团外卖商家端 Web 应用开发，负责订单管理和数据看板模块
+- 使用 React + TypeScript 重构遗留项目，代码可维护性显著提升
+- 封装通用业务组件 20+，被 3 个业务线复用
+
+## 🔨 项目经历
+
+### 创作者数据平台 · 技术负责人 | 2022.03 - 2023.06
+
+- 从零搭建创作者数据分析平台，支持百万级数据实时可视化
+- 技术选型：React + ECharts + Node.js + ClickHouse
+- 设计可配置的图表组件系统，支持 20+ 种图表类型自由组合
+
+## 🎓 教育经历
+
+### 北京大学 · 计算机科学硕士 | 2016.09 - 2019.06 · 北京
+
+研究方向为自然语言处理，GPA 3.9/4.0，获国家奖学金。
+
+### 浙江大学 · 软件工程学士 | 2012.09 - 2016.06 · 杭州
+
+GPA 3.7/4.0，连续三年获得一等奖学金，ACM 校队成员。
+
+## 🏆 获奖经历
+
+### ACM-ICPC 亚洲区域赛金奖 | 2015.11 · 上海
+
+- 三人团队协作，5 小时内完成 8 道算法题
+
+### 国家奖学金 | 2018.10
+
+- 研究生阶段学业成绩与科研成果综合排名第一
+
+## 💡 其它
+
+- **技能**：React、Vue 3、TypeScript、Node.js、Webpack、Vite、Docker
+- **证书**：AWS Certified Solutions Architect
+- **语言**：英语 CET-6 580 分，日语 N2
+```
+
+### 格式速查
+
+| 语法 | 渲染效果 | 示例 |
+|------|----------|------|
+| `---` YAML `---` | 简历头部个人信息 | `name: 陈平安` |
+| `## emoji 标题` | 分区标题 + 分割线 | `## 🏢 工作经历` |
+| `### 左侧 \| 右侧` | 左右两栏条目标题 | `### 公司 · 职位 \| 时间 · 地点` |
+| `- 内容` | 列表项（灰色圆点） | `- 负责 XXX 项目...` |
+| 纯文本 | 段落 | `GPA 3.9/4.0...` |
+| `**加粗**` | 加粗关键词 | `**技能**：React...` |
+
+## 导出
+
+- **导出 Markdown**：下载当前内容为 `resume.md` 文件
+- **导出 PDF**：调用浏览器打印，选择"另存为 PDF"即可得到 A4 排版的简历
+
+## 自动保存
+
+编辑内容自动保存到浏览器 localStorage，下次打开页面自动恢复。清除方式：浏览器控制台执行 `localStorage.removeItem('resume-builder-markdown')`。
+
+## 技术栈
+
+Vite + React + TypeScript + TailwindCSS v4 + CodeMirror + marked
