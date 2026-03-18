@@ -40,13 +40,17 @@ const marked = new Marked({
 })
 
 export function parseResume(raw: string): ParsedResume {
-  const { attributes, body } = fm<Record<string, string>>(raw)
+  const { attributes, body } = fm<Record<string, unknown>>(raw)
+
+  const rawInfo = attributes.info
+  const info = Array.isArray(rawInfo)
+    ? rawInfo.map(String)
+    : []
 
   const meta: ResumeMeta = {
-    name: attributes.name || '',
-    email: attributes.email,
-    phone: attributes.phone,
-    avatar: attributes.avatar,
+    name: String(attributes.name || ''),
+    avatar: attributes.avatar ? String(attributes.avatar) : undefined,
+    info,
   }
 
   const bodyHtml = marked.parse(body) as string

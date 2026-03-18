@@ -1,8 +1,7 @@
 export interface ResumeMeta {
   name: string
-  email?: string
-  phone?: string
   avatar?: string
+  info: string[]
 }
 
 export interface ParsedResume {

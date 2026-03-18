@@ -1,8 +1,12 @@
 export const defaultMarkdown = `---
 name: 陈平安
-email: pingan.chen@example.com
-phone: 138 0000 1234
 avatar: https://api.dicebear.com/9.x/notionists/svg?seed=pingan
+info:
+  - 前端工程师
+  - 北京
+  - 138 0000 1234
+  - pingan.chen@example.com
+  - github.com/dvlin-dev
 ---
 
 ## 🏢 工作经历

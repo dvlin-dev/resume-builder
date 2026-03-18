@@ -40,6 +40,16 @@ html, body, #root {
   line-height: 1.5;
 }
 
+.resume-contact-link {
+  color: #6b7280;
+  text-decoration: none;
+}
+
+.resume-contact-link:hover {
+  color: #374151;
+  text-decoration: underline;
+}
+
 .resume-avatar {
   width: 68px;
   height: 68px;

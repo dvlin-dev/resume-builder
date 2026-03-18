@@ -4,10 +4,30 @@ interface ResumeDocumentProps {
   resume: ParsedResume
 }
 
+function isEmail(s: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s)
+}
+
+function isUrl(s: string) {
+  return /^https?:\/\//.test(s) || /^[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(\/\S*)?$/.test(s)
+}
+
+function toHref(s: string) {
+  if (isEmail(s)) return `mailto:${s}`
+  if (isUrl(s)) return s.startsWith('http') ? s : `https://${s}`
+  return null
+}
+
+function InfoItem({ text }: { text: string }) {
+  const href = toHref(text)
+  if (href) {
+    return <a href={href} target={isEmail(text) ? undefined : '_blank'} rel="noopener noreferrer" className="resume-contact-link">{text}</a>
+  }
+  return <span>{text}</span>
+}
+
 export function ResumeDocument({ resume }: ResumeDocumentProps) {
   const { meta, bodyHtml } = resume
-
-  const contactParts = [meta.email, meta.phone].filter(Boolean)
 
   return (
     <div className="resume-page" id="resume-page">
@@ -15,9 +35,16 @@ export function ResumeDocument({ resume }: ResumeDocumentProps) {
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <h1 className="resume-name">{meta.name}</h1>
-          <div className="resume-contact">
-            {contactParts.join('  ·  ')}
-          </div>
+          {meta.info.length > 0 && (
+            <div className="resume-contact">
+              {meta.info.map((item, i) => (
+                <span key={i}>
+                  {i > 0 && '  ·  '}
+                  <InfoItem text={item} />
+                </span>
+              ))}
+            </div>
+          )}
         </div>
         {meta.avatar && (
           <img

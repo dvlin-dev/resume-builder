@@ -22,20 +22,24 @@ pnpm dev
 ```yaml
 ---
 name: 陈平安
-email: pingan.chen@example.com
-phone: 138 0000 1234
 avatar: https://example.com/avatar.jpg
+info:
+  - 前端工程师
+  - 北京
+  - 138 0000 1234
+  - pingan.chen@example.com
+  - github.com/example
+  - blog.example.com
 ---
 ```
 
 | 字段 | 必填 | 说明 |
 |------|------|------|
 | `name` | 是 | 姓名，显示为简历最顶部的大标题 |
-| `email` | 否 | 邮箱地址 |
-| `phone` | 否 | 电话号码 |
-| `avatar` | 否 | 头像图片 URL（支持任意图片链接） |
+| `avatar` | 否 | 头像图片 URL（支持任意图片链接），显示为圆角方形头像，位于右上角 |
+| `info` | 否 | 字符串数组，每项为一条个人信息，渲染时以 `·` 分隔显示在姓名下方 |
 
-`email` 和 `phone` 会以 `·` 分隔显示在姓名下方。`avatar` 显示为圆角方形头像，位于右上角。
+`info` 数组中可以放任意信息，例如：岗位、城市、电话、邮箱、GitHub、博客地址等。顺序由你决定，想放几条放几条。
 
 ### 2. 分区标题 — `##` 二级标题
 
@@ -119,9 +123,13 @@ avatar: https://example.com/avatar.jpg
 ```markdown
 ---
 name: 陈平安
-email: pingan.chen@example.com
-phone: 138 0000 1234
 avatar: https://api.dicebear.com/9.x/notionists/svg?seed=pingan
+info:
+  - 前端工程师
+  - 北京
+  - 138 0000 1234
+  - pingan.chen@example.com
+  - github.com/dvlin-dev
 ---
 
 ## 🏢 工作经历
@@ -177,7 +185,7 @@ GPA 3.7/4.0，连续三年获得一等奖学金，ACM 校队成员。
 
 | 语法 | 渲染效果 | 示例 |
 |------|----------|------|
-| `---` YAML `---` | 简历头部个人信息 | `name: 陈平安` |
+| `---` YAML `---` | 简历头部个人信息 | `name`、`avatar`、`info` 数组 |
 | `## emoji 标题` | 分区标题 + 分割线 | `## 🏢 工作经历` |
 | `### 左侧 \| 右侧` | 左右两栏条目标题 | `### 公司 · 职位 \| 时间 · 地点` |
 | `- 内容` | 列表项（灰色圆点） | `- 负责 XXX 项目...` |
