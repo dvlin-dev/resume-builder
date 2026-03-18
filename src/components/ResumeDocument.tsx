@@ -37,12 +37,28 @@ export function ResumeDocument({ resume }: ResumeDocumentProps) {
           <h1 className="resume-name">{meta.name}</h1>
           {meta.info.length > 0 && (
             <div className="resume-contact">
-              {meta.info.map((item, i) => (
-                <span key={i}>
-                  {i > 0 && '  ·  '}
-                  <InfoItem text={item} />
-                </span>
-              ))}
+              {meta.info
+                .reduce<string[][]>(
+                  (groups, item) => {
+                    if (item === '---') {
+                      groups.push([])
+                    } else {
+                      groups[groups.length - 1].push(item)
+                    }
+                    return groups
+                  },
+                  [[]]
+                )
+                .map((group, gi) => (
+                  <div key={gi}>
+                    {group.map((item, i) => (
+                      <span key={i}>
+                        {i > 0 && '  ·  '}
+                        <InfoItem text={item} />
+                      </span>
+                    ))}
+                  </div>
+                ))}
             </div>
           )}
         </div>
