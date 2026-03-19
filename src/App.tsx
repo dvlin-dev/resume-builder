@@ -9,7 +9,7 @@ import { defaultMarkdown } from '@/constants/defaultMarkdown'
 
 function App() {
   const [markdown, setMarkdown] = useState(() => loadMarkdown() || defaultMarkdown)
-  const resume = useResumeParser(markdown)
+  const { resume, error: parseError } = useResumeParser(markdown)
   const [leftWidth, setLeftWidth] = useState(50)
   const [dragging, setDragging] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -46,7 +46,7 @@ function App() {
         style={dragging ? { userSelect: 'none', cursor: 'col-resize' } : undefined}
       >
         <div className="overflow-hidden print:hidden" style={{ width: `${leftWidth}%` }}>
-          <MarkdownEditor value={markdown} onChange={setMarkdown} />
+          <MarkdownEditor value={markdown} onChange={setMarkdown} error={parseError} />
         </div>
 
         <div

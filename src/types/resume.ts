@@ -8,3 +8,8 @@ export interface ParsedResume {
   meta: ResumeMeta
   bodyHtml: string
 }
+
+export interface ParseError {
+  line: number
+  message: string
+}

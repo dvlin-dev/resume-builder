@@ -1,6 +1,6 @@
 import fm from 'front-matter'
 import { Marked, type Token, type Tokens } from 'marked'
-import type { ParsedResume, ResumeMeta } from '@/types/resume'
+import type { ParsedResume, ParseError, ResumeMeta } from '@/types/resume'
 
 const marked = new Marked({
   renderer: {
@@ -39,8 +39,22 @@ const marked = new Marked({
   },
 })
 
-export function parseResume(raw: string): ParsedResume {
-  const { attributes, body } = fm<Record<string, unknown>>(raw)
+export function parseResume(raw: string): { resume: ParsedResume; error?: ParseError } {
+  let attributes: Record<string, unknown> = {}
+  let body = raw
+  let error: ParseError | undefined
+
+  try {
+    const result = fm<Record<string, unknown>>(raw)
+    attributes = result.attributes
+    body = result.body
+  } catch (e: unknown) {
+    const mark = (e as { mark?: { line?: number } }).mark
+    error = {
+      line: mark?.line != null ? mark.line + 2 : 1,
+      message: '头部信息格式有误，请检查',
+    }
+  }
 
   const rawInfo = attributes.info
   const info = Array.isArray(rawInfo)
@@ -55,5 +69,5 @@ export function parseResume(raw: string): ParsedResume {
 
   const bodyHtml = marked.parse(body) as string
 
-  return { meta, bodyHtml }
+  return { resume: { meta, bodyHtml }, error }
 }
